@@ -1,0 +1,3 @@
+C:/Users/fuckin poptarts/CLionProjects/new_p2/cmake-build-debug/CMakeFiles/new_p2.dir
+C:/Users/fuckin poptarts/CLionProjects/new_p2/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/fuckin poptarts/CLionProjects/new_p2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
