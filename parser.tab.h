@@ -81,8 +81,8 @@ extern int yydebug;
     FUNC = 287,
     ADD = 288,
     SUB = 289,
-    ID = 290,
-    NUMBER = 291
+    NUMBER = 290,
+    ID = 291
   };
 #endif
 
@@ -90,11 +90,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 81 "parser.y"
+#line 83 "parser.y"
 
-    char* s;
+    char *sVal;
     int iVal;
-    TERNARY_TREE tVal;
+    TREE tVal;
 
 #line 100 "parser.tab.h"
 

@@ -4,9 +4,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+extern char *yytext;
 extern int yylex();
 extern void yyerror(char *);
-
+extern int yyparse();
+extern FILE *yyin;
 /* ------------- some constants --------------------------------------------- */
 
 #define SYMBOLTABLESIZE     50
@@ -18,14 +21,14 @@ extern void yyerror(char *);
 char *NodeName[] =
 {
     "PROGRAM", "BLOCK", "VARS", "EXPR", "N", "A", "R", "STATS", "MSTAT", "STAT",
-    "IN", "OUT", "IF_STAT", "LOOP", "ASSIGN", "RO", "IDVAL", "NUMBERVAL"
+    "IN", "OUT", "IF_STAT", "LOOP", "ASSIGN", "RO", "IDVAL", "NUMVAL"
 };
 #endif
 
 enum ParseTreeNodeType
 {
     PROGRAM, BLOCK, VARS, EXPR, N, A, R, STATS, MSTAT, STAT,
-    IN, OUT,IF_STAT, LOOP, ASSIGN, RO
+    IN, OUT,IF_STAT, LOOP, ASSIGN, RO, IDVAL, NUMVAL
 };
 
 
@@ -52,16 +55,15 @@ struct treeNode {
     int nodeID;
     struct treeNode *first;
     struct treeNode *second;
-    struct treeNode *third;
 };
 
 typedef struct treeNode TREE_NODE;
-typedef TREE_NODE *TERNARY_TREE;
+typedef TREE_NODE *TREE;
 
-TERNARY_TREE makeNode(int, int, TERNARY_TREE, TERNARY_TREE, TERNARY_TREE);
+TREE makeNode(int, int, TREE, TREE);
 
 #ifdef DEBUG
-void printTree(TERNARY_TREE, int);
+void printTree(TREE, int);
 #endif
 
 // symbol table definitions.
@@ -79,9 +81,9 @@ int curSymSize = 0;
 %start program
 
 %union {
-    char* s;
+    char *sVal;
     int iVal;
-    TERNARY_TREE tVal;
+    TREE tVal;
 }
 
 
@@ -94,15 +96,16 @@ int curSymSize = 0;
 %left MULT DIV MOD ADD SUB
 
 // tokens defined with values and rule names
-%token<iVal> ID NUMBER
-%type<tVal> program block vars expr N A R stats mStat stat in out if_stat loop assign RO
+%token<iVal> NUMBER ID
+//%token<sVal> ID
+%type<tVal> program type block vars expr N A R stats mStat stat in out if_stat loop assign RO
 
 
 %%
 program   :     START  vars  MAIN  block  STOP
                 {
-                    TERNARY_TREE tree;
-                    tree = makeNode(NOTHING, PROGRAM, $2,$4,NULL);
+                    TREE tree;
+                    tree = makeNode(NOTHING, PROGRAM, $2,$4);
                     #ifdef DEBUG
                     printTree(tree, 0);
                     #endif
@@ -111,193 +114,202 @@ program   :     START  vars  MAIN  block  STOP
 
 block   :       RBRACE vars stats LBRACE
                 {
-                    $$ = makeNode(NOTHING, BLOCK, $2, $3, NULL);
+                    $$ = makeNode(NOTHING, BLOCK, $2, $3);
                 }
  ;
 vars    :       /*empty*/
                 {
-                $$ = makeNode(NOTHING, VARS, NULL, NULL, NULL);
+                $$ = makeNode(NOTHING, VARS,NULL,NULL);
                 }
                 | LET ID COLON NUMBER vars
                 {
-                $$ = makeNode($2, VARS, $5, NULL, NULL);
+                    $$ = makeNode($2, VARS, $5,NULL);
+                    printf("id: %d", $2);
                 }
  ;
+//variable:
+//                type  ID{$$ = newNode($2,VARIABLE,$1,NULL,NULL);};
+//type:
+//                INT {$$ = newNode(INT,TYPE,NULL,NULL,NULL);}
+//                | BOOL {$$ = newNode(BOOL,TYPE,NULL,NULL,NULL);}
+//                | CHAR {$$ = newNode(CHAR,TYPE,NULL,NULL,NULL);}
+//                | STRING{$$ = newNode(STRING,TYPE,NULL,NULL,NULL);};
 expr         :       N  DIV  expr
                 {
-                $$ = makeNode(DIV, EXPR, $1, $3, NULL);
+                $$ = makeNode(DIV, EXPR, $1, $3);
                 }
                 |  N  MULT  expr
                 {
-                $$ = makeNode(MULT, EXPR, $1, $3, NULL);
+                $$ = makeNode(MULT, EXPR, $1, $3);
                 }
                 |  N
                 {
-                $$ = makeNode(NOTHING, EXPR, $1, NULL, NULL);
+                $$ = makeNode(NOTHING, EXPR, $1,NULL);
                 }
 ;
 N              :        A  PLUS  N
                 {
-                $$ = makeNode(PLUS, N, $1, $3, NULL);
+                $$ = makeNode(PLUS, N, $1, $3);
                 }
                 |  A MINUS  N
                 {
-                $$ = makeNode(MINUS, N, $1, $3, NULL);
+                $$ = makeNode(MINUS, N, $1, $3);
                 }
                 |  A
                 {
-                $$ = makeNode(NOTHING, N, $1, NULL, NULL);
+                $$ = makeNode(NOTHING, N, $1,NULL);
                         }
  ;
 A               :     MOD  A
                 {
-                        $$ = makeNode($2, A, NULL, NULL, NULL);
+                        $$ = makeNode(NOTHING, A, $2,NULL);
                 }
                 |   R
                 {
-                $$ = makeNode(NOTHING, A, $1, NULL, NULL);
+                $$ = makeNode(NOTHING, A, $1,NULL);
                 }
 ;
 R               :      LBRACK  expr RBRACK
                 {
-                $$ = makeNode(NOTHING, R, $2, NULL, NULL);
+                $$ = makeNode(NOTHING, R, $2,NULL);
                 }
                 | ID
                 {
-                $$ = makeNode($1, ID, NULL, NULL, NULL);
+                $$ = makeNode($1, IDVAL, NULL,NULL);
                 }
                 | NUMBER
                 {
-                $$ = makeNode($1, NUMBER, NULL, NULL, NULL);
+                $$ = makeNode($1, NUMVAL, NULL,NULL);
                 }
  ;
 stats          :       stat    mStat
                 {
-                        $$ = makeNode(NOTHING, STATS, $1, $2, NULL);
+                        $$ = makeNode(NOTHING, STATS, $1, $2);
                 }
  ;
 mStat           :  /* empty */
                 {
-                $$ = makeNode(NOTHING, MSTAT, NULL, NULL, NULL);
+                $$ = makeNode(NOTHING, MSTAT, NULL,NULL);
                 }
                 |   stat    mStat
                 {
-                        $$ = makeNode(NOTHING, MSTAT, $1, $2, NULL);
+                        $$ = makeNode(NOTHING, MSTAT, $1, $2);
                 }
  ;
 stat            :       in  DOT
                 {
-                        $$ = makeNode(NOTHING, STAT, $1, NULL, NULL);
+                        $$ = makeNode(NOTHING, STAT, $1,NULL);
                 }
                 |  out  DOT
                 {
-                        $$ = makeNode(NOTHING, STAT, $1, NULL, NULL);
+                        $$ = makeNode(NOTHING, STAT, $1,NULL);
                 }
                 |  block
                 {
-                $$ = makeNode(NOTHING, STAT, $1, NULL, NULL);
+                $$ = makeNode(NOTHING, STAT, $1,NULL);
                 }
                 |  if_stat  DOT
                 {
-                        $$ = makeNode(NOTHING, STAT, $1, NULL, NULL);
+                        $$ = makeNode(NOTHING, STAT, $1,NULL);
                 }
                 |  loop  DOT
                 {
-                        $$ = makeNode(NOTHING, STAT, $1, NULL, NULL);
+                        $$ = makeNode(NOTHING, STAT, $1,NULL);
                 }
                 |  assign  DOT
                 {
-                        $$ = makeNode(NOTHING, STAT, $1, NULL, NULL);
+                        $$ = makeNode(NOTHING, STAT, $1,NULL);
                 }
 ;
 in               :      SCANF LBRACK ID RBRACK
                 {
-                        $$ = makeNode($3, IN, NULL, NULL, NULL);
+                        $$ = makeNode($3, IN,NULL,NULL);
                 }
 ;
 out             :        PRINTF LBRACK  expr  RBRACK
                 {
-                        $$ = makeNode($3, OUT, NULL, NULL, NULL);
+                        $$ = makeNode(NOTHING, OUT,$3,NULL);
                 }
 ;
 if_stat         :      IF LBRACK  expr   RO   expr  RBRACK THEN  block
                 {
-                        $$ = makeNode(NOTHING, IF_STAT, $4, $8, NULL);
+                        $$ = makeNode(NOTHING, IF_STAT, $4, $8);
                 }
 ;
 loop           :      ITER LBRACK  expr   RO   expr  RBRACK   block
                 {
-                $$ = makeNode(NOTHING, LOOP, $4, $7, NULL);
+                $$ = makeNode(NOTHING, LOOP, $4, $7);
                 }
 ;
 assign          :      ID  ASSIGNS  expr
                 {
-                $$ = makeNode($1, ASSIGN, $3, NULL, NULL);
+                $$ = makeNode($1, ASSIGN, $3,NULL);
                 }
 ;
 RO              :      LE
                 {
-                $$ = makeNode(LE, RO, NULL, NULL, NULL);
+                $$ = makeNode(LE, RO, NULL,NULL);
                 }
                 | GE
                 {
-                $$ = makeNode(GE, RO, NULL, NULL, NULL);
+                $$ = makeNode(GE, RO, NULL,NULL);
                 }
                 |  EQUAL
                 {
-                $$ = makeNode(EQUAL, RO, NULL, NULL, NULL);
+                $$ = makeNode(EQUAL, RO, NULL,NULL);
                 }
                 |   COLON COLON
                 {
-                        $$ = makeNode(EQUAL, RO, NULL, NULL, NULL);
+                        $$ = makeNode(EQUAL, RO, NULL,NULL);
                 }
  ;
 
  %%
 
 // node generator
-TERNARY_TREE makeNode(int iVal, int nodeID, TERNARY_TREE p1,
-                      TERNARY_TREE p2, TERNARY_TREE p3)
+TREE makeNode(int iVal, int nodeID, TREE p1, TREE p2)
 {
-    TERNARY_TREE t;
-    t = (TERNARY_TREE)malloc(sizeof(TREE_NODE));
+    TREE t;
+    t = (TREE)malloc(sizeof(TREE_NODE));
 
     t->item = iVal;
     t->nodeID = nodeID;
     t->first = p1;
     t->second = p2;
-    t->third = p3;
+
     //printf("NODE CREATED");
     return(t);
 }
-#ifdef DEBUG
+
 
 // prints the tree with indentation for depth
-void printTree(TERNARY_TREE  tree, int depth){
+void printTree(TREE tree, int depth){
     int i;
 	if(tree == NULL) return;
 	for(i=depth;i;i--)
 		printf(" ");
 	if(tree->nodeID == NUMBER)
 		printf("INT: %d ",tree->item);
-	else if(tree->nodeID == ID){
+	else if(tree->nodeID == IDVAL){
 		if(tree->item > 0 && tree->item < SYMBOLTABLESIZE )
 			printf("id: %s ",symtable[tree->item]->id);
 		else
 			printf("unknown id: %d ", tree->item);
 	}
 	if(tree->item != NOTHING){
+
 		printf("Data: %d ",tree->item);
 	}
+	// If out of range of the table
 	if (tree->nodeID < 0 || tree->nodeID > sizeof(NodeName))
 		printf("Unknown ID: %d\n",tree->nodeID);
 	else
 		printf("%s\n",NodeName[tree->nodeID]);
 	printTree(tree->first,depth+2);
 	printTree(tree->second,depth+2);
-	printTree(tree->third,depth+2);
+
  }
-#endif
+
 
 
 

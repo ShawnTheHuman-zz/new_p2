@@ -1,13 +1,13 @@
 
 
-frontEnd: lex.yy.c y.tab.c
-	gcc lex.yy.c y.tab.c -o frontEnd
+frontEnd: lex.yy.c parser.tab.c
+	gcc parser.tab.c main.c -o frontEnd -lfl -DDEBUG
 
-y.tab.c y.tab.h: parser.y
+parser.tab.c parser.tab.h: parser.y
 	bison -d parser.y
 
-lex.yy.c: parser.l
-	lex parser.l
+lex.yy.c: lex.l
+	flex lex.l
 
 clean:
 	rm lex.yy.c y.tab.c frontEnd

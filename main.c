@@ -3,7 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 extern FILE* yyin;
+extern yyparse();
+
 int main(int argc, char* argv[]){
 
     if(argc < 2){

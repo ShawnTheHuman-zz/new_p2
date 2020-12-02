@@ -9,7 +9,7 @@ extern SYMTABNODEPTR symtable[SYMBOLTABLESIZE];
 extern int curSymSize;
 
 %}
-
+%option noyywrap
 %option nounput yylineno
 
 %%
@@ -19,40 +19,48 @@ extern int curSymSize;
 
 
 
-"scanf" return SCANF;
-"printf" return PRINTF;
-"main" return MAIN;
-"if" return IF;
-"then" return THEN;
-"let" return LET;
+"scanf"     return SCANF;
+"printf"    return PRINTF;
+"main"      return MAIN;
+"if"        return IF;
+"then"      return THEN;
+"let"       return LET;
 
-"func" return FUNC;
-"//"	return COMMENT; printf("\n");
-"start" return START;
-"="     return ASSIGN;
-"=<"    return LE;
-"=>"    return GE;
-":"    return COLON;
-"+"    return PLUS;
-"-"    return MINUS;
-"*"    return MULT;
-"/"    return DIV;
-"%"    return MOD;
-"."    return DOT;
-"("    return RPAREN;
-")"    return LPAREN;
-","    return COMMA;
-"{"    return RBRACE;
-"}"    return LBRACE;
-";"    return SEMICOLON;
-"["    return LBRACK;
-"]"    return RBRACK;
-"=="	return EQUAL;
+"func"      return FUNC;
+"//"	    return COMMENT; printf("\n");
+"start"     return START;
+"="         return ASSIGN;
+"=<"        return LE;
+"=>"        return GE;
+":"         return COLON;
+"+"         return PLUS;
+"-"         return MINUS;
+"*"         return MULT;
+"/"         return DIV;
+"%"         return MOD;
+"."         return DOT;
+"("         return RPAREN;
+")"         return LPAREN;
+","         return COMMA;
+"{"         return RBRACE;
+"}"         return LBRACE;
+";"         return SEMICOLON;
+"["         return LBRACK;
+"]"         return RBRACK;
+"=="	    return EQUAL;
 
 
-[A-Z][a-z]*              { printf("SYNTAX ERROR: Identifiers must start with lower case. "); }
-[a-zA-Z][_a-zA-Z0-9]*	{ yylval.iVal = addSymbol(yytext); return ID; }
-[1-9][0-9]*		       { yylval.iVal = atoi(yytext); return NUMBER; }
+[A-Z][a-z]*             { printf("SYNTAX ERROR: Identifiers must start with lower case. "); }
+[a-zA-Z][_a-zA-Z0-9]*	{
+                            printf("string: %s \n", yytext);
+                            yylval.iVal = strdup(yytext);
+                            yylval.iVal = addSymbol(yytext);
+                            return ID;
+                        }
+[0-9]+		            {
+                            yylval.iVal = atoi(yytext);
+                            printf("num: %s \n", yytext);
+                            return NUMBER; }
 [ _\t\r\s\n]			;
 ^"#".+$			        return COMMENT;
 
@@ -60,7 +68,7 @@ extern int curSymSize;
 <<EOF>>                 { printf("EOF: line %d\n", yylineno); yyterminate(); }
 %%
 
-// stores all variable id's in an array
+// stores all variable id is in an array
 
 SYMTABNODEPTR newSymTabNode()
 {
@@ -102,8 +110,5 @@ int lookup(char *s)
 }
 // used to wrap all the lexical rules
 
-int yywrap(void){
-	return 1;
-}
 
 
