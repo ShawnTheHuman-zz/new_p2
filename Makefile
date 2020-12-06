@@ -1,10 +1,10 @@
 
 
 frontEnd: lex.yy.c parser.tab.c
-	gcc parser.tab.c main.c -o frontEnd -lfl -DDEBUG
+	gcc -o frontEnd parser.tab.c main.c -lfl -DDEBUG
 
 parser.tab.c parser.tab.h: parser.y
-	bison -d parser.y
+	bison -d -t parser.y
 
 lex.yy.c: lex.l
 	flex lex.l

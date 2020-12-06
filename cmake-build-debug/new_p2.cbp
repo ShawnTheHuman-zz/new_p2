@@ -77,6 +77,12 @@
 		<Unit filename="C:/Users/fuckin poptarts/CLionProjects/new_p2/main.c">
 			<Option target="new_p2"/>
 		</Unit>
+		<Unit filename="C:/Users/fuckin poptarts/CLionProjects/new_p2/parser.tab.c">
+			<Option target="new_p2"/>
+		</Unit>
+		<Unit filename="C:/Users/fuckin poptarts/CLionProjects/new_p2/parser.y">
+			<Option target="new_p2"/>
+		</Unit>
 		<Unit filename="C:/Users/fuckin poptarts/CLionProjects/new_p2/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

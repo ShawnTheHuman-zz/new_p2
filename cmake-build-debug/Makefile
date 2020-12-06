@@ -169,6 +169,33 @@ main.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\new_p2.dir\build.make CMakeFiles/new_p2.dir/main.c.s
 .PHONY : main.c.s
 
+parser.tab.obj: parser.tab.c.obj
+
+.PHONY : parser.tab.obj
+
+# target to build an object file
+parser.tab.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\new_p2.dir\build.make CMakeFiles/new_p2.dir/parser.tab.c.obj
+.PHONY : parser.tab.c.obj
+
+parser.tab.i: parser.tab.c.i
+
+.PHONY : parser.tab.i
+
+# target to preprocess a source file
+parser.tab.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\new_p2.dir\build.make CMakeFiles/new_p2.dir/parser.tab.c.i
+.PHONY : parser.tab.c.i
+
+parser.tab.s: parser.tab.c.s
+
+.PHONY : parser.tab.s
+
+# target to generate assembly for a file
+parser.tab.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\new_p2.dir\build.make CMakeFiles/new_p2.dir/parser.tab.c.s
+.PHONY : parser.tab.c.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -181,6 +208,9 @@ help:
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
+	@echo ... parser.tab.obj
+	@echo ... parser.tab.i
+	@echo ... parser.tab.s
 .PHONY : help
 
 

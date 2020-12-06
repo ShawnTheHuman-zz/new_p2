@@ -17,13 +17,13 @@ extern FILE *yyin;
 #define NOTHING        -1
 #define INDENTOFFSET    2
 
-#ifdef DEBUG
+//#ifdef DEBUG
 char *NodeName[] =
 {
     "PROGRAM", "BLOCK", "VARS", "EXPR", "N", "A", "R", "STATS", "MSTAT", "STAT",
     "IN", "OUT", "IF_STAT", "LOOP", "ASSIGN", "RO", "IDVAL", "NUMVAL"
 };
-#endif
+//#endif
 
 enum ParseTreeNodeType
 {
@@ -62,9 +62,9 @@ typedef TREE_NODE *TREE;
 
 TREE makeNode(int, int, TREE, TREE);
 
-#ifdef DEBUG
+//#ifdef DEBUG
 void printTree(TREE, int);
-#endif
+//#endif
 
 // symbol table definitions.
 struct symbolTableNode{
@@ -86,7 +86,10 @@ int curSymSize = 0;
     TREE tVal;
 }
 
-
+/* Generate the parser description file. */
+%verbose
+/* Enable run-time traces (yydebug). */
+%define parse.trace
 // list of all tokens
 
 %token SEMICOLON GE LE EQUAL COLON RBRACK LBRACK ASSIGNS LPAREN RPAREN COMMENT
@@ -100,15 +103,16 @@ int curSymSize = 0;
 //%token<sVal> ID
 %type<tVal> program type block vars expr N A R stats mStat stat in out if_stat loop assign RO
 
+%printer { fprintf (yyo, "%s", $$->iVal); } VAR;
 
 %%
 program   :     START  vars  MAIN  block  STOP
                 {
                     TREE tree;
                     tree = makeNode(NOTHING, PROGRAM, $2,$4);
-                    #ifdef DEBUG
+                    //#ifdef DEBUG
                     printTree(tree, 0);
-                    #endif
+                    //#endif
                 }
 ;
 
@@ -121,10 +125,10 @@ vars    :       /*empty*/
                 {
                 $$ = makeNode(NOTHING, VARS,NULL,NULL);
                 }
-                | LET ID COLON NUMBER vars
+                | LET expr COLON NUMBER vars
                 {
-                    $$ = makeNode($2, VARS, $5,NULL);
-                    printf("id: %d", $2);
+                    $$ = makeNode($2, VARS,$2, $5);
+
                 }
  ;
 //variable:
@@ -143,9 +147,9 @@ expr         :       N  DIV  expr
                 $$ = makeNode(MULT, EXPR, $1, $3);
                 }
                 |  N
-                {
-                $$ = makeNode(NOTHING, EXPR, $1,NULL);
-                }
+//                {
+//                $$ = makeNode(NOTHING, EXPR, $1,NULL);
+//                }
 ;
 N              :        A  PLUS  N
                 {
@@ -156,18 +160,18 @@ N              :        A  PLUS  N
                 $$ = makeNode(MINUS, N, $1, $3);
                 }
                 |  A
-                {
-                $$ = makeNode(NOTHING, N, $1,NULL);
-                        }
+//                {
+//                $$ = makeNode(NOTHING, N, $1,NULL);
+//                        }
  ;
 A               :     MOD  A
                 {
                         $$ = makeNode(NOTHING, A, $2,NULL);
                 }
                 |   R
-                {
-                $$ = makeNode(NOTHING, A, $1,NULL);
-                }
+//                {
+//                $$ = makeNode(NOTHING, A, $1,NULL);
+//                }
 ;
 R               :      LBRACK  expr RBRACK
                 {
@@ -175,11 +179,11 @@ R               :      LBRACK  expr RBRACK
                 }
                 | ID
                 {
-                $$ = makeNode($1, IDVAL, NULL,NULL);
+                $$ = makeNode($1, ID, NULL,NULL);
                 }
                 | NUMBER
                 {
-                $$ = makeNode($1, NUMVAL, NULL,NULL);
+                $$ = makeNode($1, NUMBER, NULL,NULL);
                 }
  ;
 stats          :       stat    mStat
@@ -290,7 +294,7 @@ void printTree(TREE tree, int depth){
 		printf(" ");
 	if(tree->nodeID == NUMBER)
 		printf("INT: %d ",tree->item);
-	else if(tree->nodeID == IDVAL){
+	else if(tree->nodeID == ID || tree->nodeID == VARS || tree->nodeID == IN){
 		if(tree->item > 0 && tree->item < SYMBOLTABLESIZE )
 			printf("id: %s ",symtable[tree->item]->id);
 		else

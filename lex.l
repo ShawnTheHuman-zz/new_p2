@@ -8,6 +8,7 @@
 extern SYMTABNODEPTR symtable[SYMBOLTABLESIZE];
 extern int curSymSize;
 
+
 %}
 %option noyywrap
 %option nounput yylineno
@@ -53,7 +54,6 @@ extern int curSymSize;
 [A-Z][a-z]*             { printf("SYNTAX ERROR: Identifiers must start with lower case. "); }
 [a-zA-Z][_a-zA-Z0-9]*	{
                             printf("string: %s \n", yytext);
-                            yylval.iVal = strdup(yytext);
                             yylval.iVal = addSymbol(yytext);
                             return ID;
                         }
