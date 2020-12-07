@@ -4,9 +4,20 @@ p2
 
 CS4280
 
-I know it's really late after the fact but i figured out some of the stuff
-I was doing wrong. I couldnt get the tree to print right because i wasnt making empty
-nodes for the empty parts of the grammar. Im still having trouble displaying the
-data for each node but other than that it's outputting correctly now.
-
-as usual the make file compiles the project automatically.
+BNF: 
+<program>  ->     start <vars> main <block> stop
+<block>       ->      { <vars> <stats> }
+<vars>         ->      empty | let Identifier :  Integer    <vars>
+<expr>        ->      <N> / <expr>  | <N> * <expr> | <N>
+<N>             ->       <A> + <N> | <A> - <N> | <A>
+<A>              ->     % <A> |  <R>
+<R>              ->      [ <expr> ] | Identifier | Integer
+<stats>         ->      <stat>  <mStat>
+<mStat>       ->      empty |  <stat>  <mStat>
+<stat>           ->      <in> .  | <out> .  | <block> | <if> .  | <loop> .  | <assign> .  
+<in>              ->      scanf [ Identifier ]
+<out>            ->      printf [ <expr> ]
+<if>               ->      if [ <expr> <RO> <expr> ] then <block>
+<loop>          ->      iter [ <expr> <RO> <expr> ]  <block>
+<assign>       ->      Identifier  = <expr> 
+<RO>            ->      =<  | =>   |  ==  |   :  :  (two tokens)
