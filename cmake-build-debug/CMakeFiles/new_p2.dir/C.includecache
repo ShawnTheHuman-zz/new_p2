@@ -55,6 +55,8 @@ stdlib.h
 -
 string.h
 -
+stdbool.h
+-
 p3.c
 C:/Users/fuckin poptarts/CLionProjects/new_p2/p3.c
 limits.h

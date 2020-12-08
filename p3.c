@@ -10,16 +10,16 @@
 
 void insert(const char* arr, const char* node){
     strcat(arr, node);
+    return;
 }
 
 
 bool verify(const char* arr, const char* node){
 
         if(strstr(arr, node) != NULL) {
-            printf("Gotcha!\n");
-
+            return true;
         }
-        else{
-            printf("not found\n");
+        else if(strstr(arr, node) == NULL){
+                        return false;
         }
 }

@@ -72,6 +72,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "p3.c"
 
 
@@ -147,7 +148,7 @@ int curSymSize = 0;
 
 
 
-#line 151 "parser.tab.c"
+#line 152 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -237,13 +238,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 84 "parser.y"
+#line 85 "parser.y"
 
     char *sVal;
     int iVal;
     TREE tVal;
 
-#line 247 "parser.tab.c"
+#line 248 "parser.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -622,10 +623,10 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   110,   110,   121,   127,   130,   143,   147,   151,   156,
-     160,   164,   169,   173,   178,   182,   186,   191,   197,   200,
-     205,   209,   213,   217,   221,   225,   230,   235,   240,   245,
-     250,   255,   259,   263,   267
+       0,   111,   111,   122,   128,   131,   138,   142,   146,   149,
+     153,   157,   160,   164,   167,   171,   175,   180,   186,   189,
+     194,   198,   202,   206,   210,   214,   219,   224,   229,   234,
+     239,   244,   248,   252,   256
 };
 #endif
 
@@ -672,12 +673,12 @@ static const yytype_int8 yypact[] =
 {
      -20,     0,    22,   -11,     4,   -21,    25,     9,    -6,     0,
       10,    -6,    -6,   -21,   -21,     0,    -2,    -4,   -21,    -9,
-     -21,    27,   -21,   -21,    -6,    -6,    -6,    -6,    24,    32,
-      33,    34,    26,   -21,    23,    -9,    31,    35,    36,    37,
-      38,   -21,   -21,   -21,   -21,   -21,    11,    -6,    -6,    -6,
-      -6,   -21,   -21,    -9,   -21,   -21,   -21,   -21,   -21,    39,
-      45,     1,     1,   -21,   -21,   -21,   -21,   -21,   -21,   -21,
-      47,    -6,    -6,   -21,    48,    49,    15,     9,     9,   -21,
+     -21,    27,   -21,   -21,    -6,    -6,    -6,    -6,    24,    28,
+      32,    33,    26,   -21,    23,    -9,    29,    31,    34,    35,
+      36,   -21,   -21,   -21,   -21,   -21,    14,    15,    -6,    -6,
+      -6,   -21,   -21,    -9,   -21,   -21,   -21,   -21,   -21,    38,
+      39,     1,     1,   -21,   -21,   -21,   -21,   -21,   -21,   -21,
+      46,    -6,    -6,   -21,    47,    48,    37,     9,     9,   -21,
      -21
 };
 
@@ -700,7 +701,7 @@ static const yytype_int8 yydefact[] =
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -21,   -21,    -7,    -5,   -10,    -3,    43,   -21,   -21,     5,
+     -21,   -21,    -7,    -5,   -10,    -3,    42,   -21,   -21,     5,
       40,   -21,   -21,   -21,   -21,   -21,     2
 };
 
@@ -719,10 +720,10 @@ static const yytype_int8 yytable[] =
       10,    21,     1,    11,    19,    67,    68,    69,    70,    12,
       23,     9,    26,    27,    42,    43,    24,    25,    28,    29,
       30,    31,     5,    44,    45,     3,     6,     7,    32,     9,
-      13,    14,     8,    46,    20,    41,    50,    60,    61,    62,
-      63,    47,    48,    49,    51,    54,    78,    65,    59,    55,
-      56,    57,    58,    66,    73,    22,    76,    77,    64,    35,
-       0,    74,    75,     0,    72,     0,     0,     0,     0,     0,
+      13,    14,     8,    46,    20,    41,    50,    47,    61,    62,
+      63,    48,    49,    54,    51,    55,    65,    66,    56,    57,
+      58,    59,    60,    73,    22,    76,    77,     0,    64,    35,
+       0,    74,    75,     0,    72,     0,     0,     0,    78,     0,
       79,    80
 };
 
@@ -731,10 +732,10 @@ static const yytype_int8 yycheck[] =
        7,    11,    22,     9,     9,     4,     5,     6,     7,    15,
       15,    20,    16,    17,    24,    25,    18,    19,    27,    28,
       29,    30,     0,    26,    27,    25,    37,    23,    37,    20,
-      36,    37,     7,     9,    24,     8,    10,    47,    48,    49,
-      50,     9,     9,     9,    21,    14,    31,     8,    37,    14,
-      14,    14,    14,     8,     7,    12,     8,     8,    53,    19,
-      -1,    71,    72,    -1,    62,    -1,    -1,    -1,    -1,    -1,
+      36,    37,     7,     9,    24,     8,    10,     9,    48,    49,
+      50,     9,     9,    14,    21,    14,     8,     8,    14,    14,
+      14,    37,    37,     7,    12,     8,     8,    -1,    53,    19,
+      -1,    71,    72,    -1,    62,    -1,    -1,    -1,    31,    -1,
       77,    78
 };
 
@@ -748,7 +749,7 @@ static const yytype_int8 yystos[] =
       29,    30,    37,    40,    46,    48,    49,    50,    51,    52,
       53,     8,    42,    42,    43,    43,     9,     9,     9,     9,
       10,    21,    47,    48,    14,    14,    14,    14,    14,    37,
-      42,    42,    42,    42,    47,     8,     8,     4,     5,     6,
+      37,    42,    42,    42,    47,     8,     8,     4,     5,     6,
        7,    54,    54,     7,    42,    42,     8,     8,    31,    40,
       40
 };
@@ -1464,7 +1465,7 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 111 "parser.y"
+#line 112 "parser.y"
                 {
                     TREE tree;
                     tree = makeNode(NOTHING, PROGRAM, (yyvsp[-3].tVal),(yyvsp[-1].tVal));
@@ -1473,244 +1474,244 @@ yyreduce:
                     //#endif
                     p3(tree);
                 }
-#line 1477 "parser.tab.c"
+#line 1478 "parser.tab.c"
     break;
 
   case 3:
-#line 122 "parser.y"
+#line 123 "parser.y"
                 {
                     (yyval.tVal) = makeNode(NOTHING, BLOCK, (yyvsp[-2].tVal), (yyvsp[-1].tVal));
                 }
-#line 1485 "parser.tab.c"
+#line 1486 "parser.tab.c"
     break;
 
   case 4:
-#line 127 "parser.y"
+#line 128 "parser.y"
                 {
                 (yyval.tVal) = makeNode(NULL, EMPTY_NODE,NULL,NULL);
                 }
-#line 1493 "parser.tab.c"
+#line 1494 "parser.tab.c"
     break;
 
   case 5:
-#line 131 "parser.y"
+#line 132 "parser.y"
                 {
                     (yyval.tVal) = makeNode((yyvsp[-3].iVal), VARS,(yyvsp[-1].tVal), (yyvsp[0].tVal));
 
                 }
-#line 1502 "parser.tab.c"
+#line 1503 "parser.tab.c"
     break;
 
   case 6:
-#line 144 "parser.y"
+#line 139 "parser.y"
                 {
                 (yyval.tVal) = makeNode(DIV, EXPR, (yyvsp[-2].tVal), (yyvsp[0].tVal));
                 }
-#line 1510 "parser.tab.c"
+#line 1511 "parser.tab.c"
     break;
 
   case 7:
-#line 148 "parser.y"
+#line 143 "parser.y"
                 {
                 (yyval.tVal) = makeNode(MULT, EXPR, (yyvsp[-2].tVal), (yyvsp[0].tVal));
                 }
-#line 1518 "parser.tab.c"
+#line 1519 "parser.tab.c"
     break;
 
   case 9:
-#line 157 "parser.y"
+#line 150 "parser.y"
                 {
                 (yyval.tVal) = makeNode(PLUS, N, (yyvsp[-2].tVal), (yyvsp[0].tVal));
                 }
-#line 1526 "parser.tab.c"
+#line 1527 "parser.tab.c"
     break;
 
   case 10:
-#line 161 "parser.y"
+#line 154 "parser.y"
                 {
                 (yyval.tVal) = makeNode(MINUS, N, (yyvsp[-2].tVal), (yyvsp[0].tVal));
                 }
-#line 1534 "parser.tab.c"
+#line 1535 "parser.tab.c"
     break;
 
   case 12:
-#line 170 "parser.y"
+#line 161 "parser.y"
                 {
                         (yyval.tVal) = makeNode(NOTHING, A, (yyvsp[0].tVal),NULL);
                 }
-#line 1542 "parser.tab.c"
+#line 1543 "parser.tab.c"
     break;
 
   case 14:
-#line 179 "parser.y"
+#line 168 "parser.y"
                 {
                 (yyval.tVal) = makeNode(NOTHING, R, (yyvsp[-1].tVal),NULL);
                 }
-#line 1550 "parser.tab.c"
+#line 1551 "parser.tab.c"
     break;
 
   case 15:
-#line 183 "parser.y"
+#line 172 "parser.y"
                 {
                 (yyval.tVal) = makeNode((yyvsp[0].iVal), ID, NULL,NULL);
                 }
-#line 1558 "parser.tab.c"
+#line 1559 "parser.tab.c"
     break;
 
   case 16:
-#line 187 "parser.y"
+#line 176 "parser.y"
                 {
                 (yyval.tVal) = makeNode((yyvsp[0].iVal), NUMBER, NULL,NULL);
                 }
-#line 1566 "parser.tab.c"
+#line 1567 "parser.tab.c"
     break;
 
   case 17:
-#line 192 "parser.y"
+#line 181 "parser.y"
                 {
                         (yyval.tVal) = makeNode(NOTHING, STATS, (yyvsp[-1].tVal), (yyvsp[0].tVal));
                 }
-#line 1574 "parser.tab.c"
+#line 1575 "parser.tab.c"
     break;
 
   case 18:
-#line 197 "parser.y"
+#line 186 "parser.y"
                 {
                 (yyval.tVal) = makeNode(NOTHING, MSTAT, NULL,NULL);
                 }
-#line 1582 "parser.tab.c"
+#line 1583 "parser.tab.c"
     break;
 
   case 19:
-#line 201 "parser.y"
+#line 190 "parser.y"
                 {
                         (yyval.tVal) = makeNode(NOTHING, MSTAT, (yyvsp[-1].tVal), (yyvsp[0].tVal));
                 }
-#line 1590 "parser.tab.c"
+#line 1591 "parser.tab.c"
     break;
 
   case 20:
-#line 206 "parser.y"
+#line 195 "parser.y"
                 {
                         (yyval.tVal) = makeNode(NOTHING, STAT, (yyvsp[-1].tVal),NULL);
                 }
-#line 1598 "parser.tab.c"
+#line 1599 "parser.tab.c"
     break;
 
   case 21:
-#line 210 "parser.y"
+#line 199 "parser.y"
                 {
                         (yyval.tVal) = makeNode(NOTHING, STAT, (yyvsp[-1].tVal),NULL);
                 }
-#line 1606 "parser.tab.c"
+#line 1607 "parser.tab.c"
     break;
 
   case 22:
-#line 214 "parser.y"
+#line 203 "parser.y"
                 {
                 (yyval.tVal) = makeNode(NOTHING, STAT, (yyvsp[0].tVal),NULL);
                 }
-#line 1614 "parser.tab.c"
+#line 1615 "parser.tab.c"
     break;
 
   case 23:
-#line 218 "parser.y"
+#line 207 "parser.y"
                 {
                         (yyval.tVal) = makeNode(NOTHING, STAT, (yyvsp[-1].tVal),NULL);
                 }
-#line 1622 "parser.tab.c"
+#line 1623 "parser.tab.c"
     break;
 
   case 24:
-#line 222 "parser.y"
+#line 211 "parser.y"
                 {
                         (yyval.tVal) = makeNode(NOTHING, STAT, (yyvsp[-1].tVal),NULL);
                 }
-#line 1630 "parser.tab.c"
+#line 1631 "parser.tab.c"
     break;
 
   case 25:
-#line 226 "parser.y"
+#line 215 "parser.y"
                 {
                         (yyval.tVal) = makeNode(NOTHING, STAT, (yyvsp[-1].tVal),NULL);
                 }
-#line 1638 "parser.tab.c"
+#line 1639 "parser.tab.c"
     break;
 
   case 26:
-#line 231 "parser.y"
+#line 220 "parser.y"
                 {
                         (yyval.tVal) = makeNode((yyvsp[-1].iVal), IN,NULL,NULL);
                 }
-#line 1646 "parser.tab.c"
+#line 1647 "parser.tab.c"
     break;
 
   case 27:
-#line 236 "parser.y"
+#line 225 "parser.y"
                 {
-                        (yyval.tVal) = makeNode(NOTHING, OUT,(yyvsp[-1].tVal),NULL);
+                        (yyval.tVal) = makeNode((yyvsp[-1].iVal), OUT,NULL,NULL);
                 }
-#line 1654 "parser.tab.c"
+#line 1655 "parser.tab.c"
     break;
 
   case 28:
-#line 241 "parser.y"
+#line 230 "parser.y"
                 {
                         (yyval.tVal) = makeNode(NOTHING, IF_STAT, (yyvsp[-4].tVal), (yyvsp[0].tVal));
                 }
-#line 1662 "parser.tab.c"
+#line 1663 "parser.tab.c"
     break;
 
   case 29:
-#line 246 "parser.y"
+#line 235 "parser.y"
                 {
                 (yyval.tVal) = makeNode(NOTHING, LOOP, (yyvsp[-3].tVal), (yyvsp[0].tVal));
                 }
-#line 1670 "parser.tab.c"
+#line 1671 "parser.tab.c"
     break;
 
   case 30:
-#line 251 "parser.y"
+#line 240 "parser.y"
                 {
                 (yyval.tVal) = makeNode((yyvsp[-2].iVal), ASSIGN, (yyvsp[0].tVal),NULL);
                 }
-#line 1678 "parser.tab.c"
+#line 1679 "parser.tab.c"
     break;
 
   case 31:
-#line 256 "parser.y"
+#line 245 "parser.y"
                 {
                 (yyval.tVal) = makeNode(LE, RO, NULL,NULL);
                 }
-#line 1686 "parser.tab.c"
+#line 1687 "parser.tab.c"
     break;
 
   case 32:
-#line 260 "parser.y"
+#line 249 "parser.y"
                 {
                 (yyval.tVal) = makeNode(GE, RO, NULL,NULL);
                 }
-#line 1694 "parser.tab.c"
+#line 1695 "parser.tab.c"
     break;
 
   case 33:
-#line 264 "parser.y"
+#line 253 "parser.y"
                 {
                 (yyval.tVal) = makeNode(EQUAL, RO, NULL,NULL);
                 }
-#line 1702 "parser.tab.c"
+#line 1703 "parser.tab.c"
     break;
 
   case 34:
-#line 268 "parser.y"
+#line 257 "parser.y"
                 {
                         (yyval.tVal) = makeNode(EQUAL, RO, NULL,NULL);
                 }
-#line 1710 "parser.tab.c"
+#line 1711 "parser.tab.c"
     break;
 
 
-#line 1714 "parser.tab.c"
+#line 1715 "parser.tab.c"
 
       default: break;
     }
@@ -1942,7 +1943,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 273 "parser.y"
+#line 262 "parser.y"
 
 
 // node generator
@@ -1989,37 +1990,33 @@ void printTree(TREE tree, int depth){
 	printTree(tree->second,depth+2);
 
  }
-
+const char varArr[20];
  void p3(TREE tree){
-     const char varArr[20] = "";
+
 
      if(tree == NULL) return;
-     if(tree->nodeID == VARS) {
-         //printf("vars\n");
-         char* id = symtable[tree->item]->id;
-         insert(varArr,id);
-         verify(varArr,id);
-         //printf("vars %s\n", symtable[tree->item]->id);
-         //char* str = strstr(varArr, id);
-         //printf("%s \n", str);
 
+
+     char* id = symtable[tree->item]->id;
+
+
+     if(tree->nodeID == VARS) {
+
+         if(verify(varArr,id) == false)
+             insert(varArr,id);
+
+         else
+             printf("ERROR: identifier \"%s\" previously declared in this scope. \n", id);
 
      }
-//         char * pch;
-//         pch = strstr (varArr,symtable[tree->item]->id);
-//       if(!(verify(symtable[tree->item]->id, varArr))){
-//           insert(symtable[tree->item]->id,varArr);
-//       }
-//        else{printf("Error: previously declared");}
 
-    if(tree->nodeID == IN)
-        printf("IN\n");
-//        if(!(verify(symtable[tree->item]->id, varArr))){
-//            printf("Error: undeclared identifier");
-//           // insert(symtable[tree->item]->id,varArr)
-//        }
-//        else{;}
+    else if(tree->nodeID == IN || tree->nodeID == OUT) {
 
+         if (verify(varArr, id) == false)
+             printf("ERROR: Variable \"%s\" used witout declaration. \n", id);
+         else
+                ;
+     }
 
      p3(tree->first);
      p3(tree->second);

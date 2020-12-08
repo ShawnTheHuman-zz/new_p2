@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "p3.c"
 
 
@@ -133,13 +134,7 @@ vars    :       /*empty*/
 
                 }
  ;
-//variable:
-//                type  ID{$$ = newNode($2,VARIABLE,$1,NULL,NULL);};
-//type:
-//                INT {$$ = newNode(INT,TYPE,NULL,NULL,NULL);}
-//                | BOOL {$$ = newNode(BOOL,TYPE,NULL,NULL,NULL);}
-//                | CHAR {$$ = newNode(CHAR,TYPE,NULL,NULL,NULL);}
-//                | STRING{$$ = newNode(STRING,TYPE,NULL,NULL,NULL);};
+
 expr         :       N  DIV  expr
                 {
                 $$ = makeNode(DIV, EXPR, $1, $3);
@@ -149,9 +144,7 @@ expr         :       N  DIV  expr
                 $$ = makeNode(MULT, EXPR, $1, $3);
                 }
                 |  N
-//                {
-//                $$ = makeNode(NOTHING, EXPR, $1,NULL);
-//                }
+
 ;
 N              :        A  PLUS  N
                 {
@@ -162,18 +155,14 @@ N              :        A  PLUS  N
                 $$ = makeNode(MINUS, N, $1, $3);
                 }
                 |  A
-//                {
-//                $$ = makeNode(NOTHING, N, $1,NULL);
-//                        }
+
  ;
 A               :     MOD  A
                 {
                         $$ = makeNode(NOTHING, A, $2,NULL);
                 }
                 |   R
-//                {
-//                $$ = makeNode(NOTHING, A, $1,NULL);
-//                }
+
 ;
 R               :      LBRACK  expr RBRACK
                 {
@@ -232,9 +221,9 @@ in               :      SCANF LBRACK ID RBRACK
                         $$ = makeNode($3, IN,NULL,NULL);
                 }
 ;
-out             :        PRINTF LBRACK  expr  RBRACK
+out             :        PRINTF LBRACK  ID  RBRACK
                 {
-                        $$ = makeNode(NOTHING, OUT,$3,NULL);
+                        $$ = makeNode($3, OUT,NULL,NULL);
                 }
 ;
 if_stat         :      IF LBRACK  expr   RO   expr  RBRACK THEN  block
@@ -316,37 +305,33 @@ void printTree(TREE tree, int depth){
 	printTree(tree->second,depth+2);
 
  }
-
+const char varArr[20];
  void p3(TREE tree){
-     const char varArr[20] = "";
+
 
      if(tree == NULL) return;
-     if(tree->nodeID == VARS) {
-         //printf("vars\n");
-         char* id = symtable[tree->item]->id;
-         insert(varArr,id);
-         verify(varArr,id);
-         //printf("vars %s\n", symtable[tree->item]->id);
-         //char* str = strstr(varArr, id);
-         //printf("%s \n", str);
 
+
+     char* id = symtable[tree->item]->id;
+
+
+     if(tree->nodeID == VARS) {
+
+         if(verify(varArr,id) == false)
+             insert(varArr,id);
+
+         else
+             printf("ERROR: identifier \"%s\" previously declared in this scope. \n", id);
 
      }
-//         char * pch;
-//         pch = strstr (varArr,symtable[tree->item]->id);
-//       if(!(verify(symtable[tree->item]->id, varArr))){
-//           insert(symtable[tree->item]->id,varArr);
-//       }
-//        else{printf("Error: previously declared");}
 
-    if(tree->nodeID == IN)
-        printf("IN\n");
-//        if(!(verify(symtable[tree->item]->id, varArr))){
-//            printf("Error: undeclared identifier");
-//           // insert(symtable[tree->item]->id,varArr)
-//        }
-//        else{;}
+    else if(tree->nodeID == IN || tree->nodeID == OUT) {
 
+         if (verify(varArr, id) == false)
+             printf("ERROR: Variable \"%s\" used witout declaration. \n", id);
+         else
+                ;
+     }
 
      p3(tree->first);
      p3(tree->second);
