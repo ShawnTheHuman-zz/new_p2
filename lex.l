@@ -53,13 +53,13 @@ extern int curSymSize;
 
 [A-Z][a-z]*             { printf("SYNTAX ERROR: Identifiers must start with lower case. "); }
 [a-zA-Z][_a-zA-Z0-9]*	{
-                            printf("string: %s \n", yytext);
+
                             yylval.iVal = addSymbol(yytext);
                             return ID;
                         }
 [0-9]+		            {
                             yylval.iVal = atoi(yytext);
-                            printf("num: %s \n", yytext);
+
                             return NUMBER; }
 [ _\t\r\s\n]			;
 ^"#".+$			        return COMMENT;

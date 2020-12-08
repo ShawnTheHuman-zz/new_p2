@@ -4,6 +4,8 @@
 CMakeFiles/new_p2.dir/main.c.obj: ../main.c
 
 CMakeFiles/new_p2.dir/parser.tab.c.obj: ../lex.yy.c
+CMakeFiles/new_p2.dir/parser.tab.c.obj: ../p3.c
+CMakeFiles/new_p2.dir/parser.tab.c.obj: ../p3.h
 CMakeFiles/new_p2.dir/parser.tab.c.obj: ../parser.tab.c
 CMakeFiles/new_p2.dir/parser.tab.c.obj: ../parser.tab.h
 

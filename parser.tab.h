@@ -79,10 +79,11 @@ extern int yydebug;
     ITER = 285,
     THEN = 286,
     FUNC = 287,
-    ADD = 288,
-    SUB = 289,
-    NUMBER = 290,
-    ID = 291
+    EMPTY_NODE = 288,
+    ADD = 289,
+    SUB = 290,
+    NUMBER = 291,
+    ID = 292
   };
 #endif
 
@@ -90,13 +91,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 83 "parser.y"
+#line 84 "parser.y"
 
     char *sVal;
     int iVal;
     TREE tVal;
 
-#line 100 "parser.tab.h"
+#line 101 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

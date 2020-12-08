@@ -12,6 +12,7 @@ Terminals unused in grammar
     COMMENT
     COMMA
     FUNC
+    EMPTY_NODE
     ADD
     SUB
 
@@ -25,7 +26,7 @@ Grammar
     2 block: RBRACE vars stats LBRACE
 
     3 vars: %empty
-    4     | LET expr COLON NUMBER vars
+    4     | LET ID COLON expr vars
 
     5 expr: N DIV expr
     6     | N MULT expr
@@ -104,62 +105,63 @@ Terminals, with rules where they appear
     ITER (285) 28
     THEN (286) 27
     FUNC (287)
-    ADD (288)
-    SUB (289)
-    NUMBER <iVal> (290) 4 15
-    ID <iVal> (291) 14 25 29
+    EMPTY_NODE (288)
+    ADD (289)
+    SUB (290)
+    NUMBER <iVal> (291) 15
+    ID <iVal> (292) 4 14 25 29
 
 
 Nonterminals, with rules where they appear
 
-    $accept (37)
+    $accept (38)
         on left: 0
-    program <tVal> (38)
+    program <tVal> (39)
         on left: 1
         on right: 0
-    block <tVal> (39)
+    block <tVal> (40)
         on left: 2
         on right: 1 21 27 28
-    vars <tVal> (40)
+    vars <tVal> (41)
         on left: 3 4
         on right: 1 2 4
-    expr <tVal> (41)
+    expr <tVal> (42)
         on left: 5 6 7
         on right: 4 5 6 13 26 27 28 29
-    N <tVal> (42)
+    N <tVal> (43)
         on left: 8 9 10
         on right: 5 6 7 8 9
-    A <tVal> (43)
+    A <tVal> (44)
         on left: 11 12
         on right: 8 9 10 11
-    R <tVal> (44)
+    R <tVal> (45)
         on left: 13 14 15
         on right: 12
-    stats <tVal> (45)
+    stats <tVal> (46)
         on left: 16
         on right: 2
-    mStat <tVal> (46)
+    mStat <tVal> (47)
         on left: 17 18
         on right: 16 18
-    stat <tVal> (47)
+    stat <tVal> (48)
         on left: 19 20 21 22 23 24
         on right: 16 18
-    in <tVal> (48)
+    in <tVal> (49)
         on left: 25
         on right: 19
-    out <tVal> (49)
+    out <tVal> (50)
         on left: 26
         on right: 20
-    if_stat <tVal> (50)
+    if_stat <tVal> (51)
         on left: 27
         on right: 22
-    loop <tVal> (51)
+    loop <tVal> (52)
         on left: 28
         on right: 23
-    assign <tVal> (52)
+    assign <tVal> (53)
         on left: 29
         on right: 24
-    RO <tVal> (53)
+    RO <tVal> (54)
         on left: 30 31 32 33
         on right: 27 28
 
@@ -193,24 +195,16 @@ State 2
 
 State 3
 
-    4 vars: LET . expr COLON NUMBER vars
+    4 vars: LET . ID COLON expr vars
 
-    LBRACK  shift, and go to state 6
-    MOD     shift, and go to state 7
-    NUMBER  shift, and go to state 8
-    ID      shift, and go to state 9
-
-    expr  go to state 10
-    N     go to state 11
-    A     go to state 12
-    R     go to state 13
+    ID  shift, and go to state 6
 
 
 State 4
 
     1 program: START vars . MAIN block STOP
 
-    MAIN  shift, and go to state 14
+    MAIN  shift, and go to state 7
 
 
 State 5
@@ -222,173 +216,36 @@ State 5
 
 State 6
 
-   13 R: LBRACK . expr RBRACK
+    4 vars: LET ID . COLON expr vars
 
-    LBRACK  shift, and go to state 6
-    MOD     shift, and go to state 7
-    NUMBER  shift, and go to state 8
-    ID      shift, and go to state 9
-
-    expr  go to state 15
-    N     go to state 11
-    A     go to state 12
-    R     go to state 13
+    COLON  shift, and go to state 8
 
 
 State 7
 
-   11 A: MOD . A
+    1 program: START vars MAIN . block STOP
 
-    LBRACK  shift, and go to state 6
-    MOD     shift, and go to state 7
-    NUMBER  shift, and go to state 8
-    ID      shift, and go to state 9
+    RBRACE  shift, and go to state 9
 
-    A  go to state 16
-    R  go to state 13
+    block  go to state 10
 
 
 State 8
 
-   15 R: NUMBER .
+    4 vars: LET ID COLON . expr vars
 
-    $default  reduce using rule 15 (R)
+    LBRACK  shift, and go to state 11
+    MOD     shift, and go to state 12
+    NUMBER  shift, and go to state 13
+    ID      shift, and go to state 14
+
+    expr  go to state 15
+    N     go to state 16
+    A     go to state 17
+    R     go to state 18
 
 
 State 9
-
-   14 R: ID .
-
-    $default  reduce using rule 14 (R)
-
-
-State 10
-
-    4 vars: LET expr . COLON NUMBER vars
-
-    COLON  shift, and go to state 17
-
-
-State 11
-
-    5 expr: N . DIV expr
-    6     | N . MULT expr
-    7     | N .
-
-    DIV   shift, and go to state 18
-    MULT  shift, and go to state 19
-
-    $default  reduce using rule 7 (expr)
-
-
-State 12
-
-    8 N: A . PLUS N
-    9  | A . MINUS N
-   10  | A .
-
-    PLUS   shift, and go to state 20
-    MINUS  shift, and go to state 21
-
-    $default  reduce using rule 10 (N)
-
-
-State 13
-
-   12 A: R .
-
-    $default  reduce using rule 12 (A)
-
-
-State 14
-
-    1 program: START vars MAIN . block STOP
-
-    RBRACE  shift, and go to state 22
-
-    block  go to state 23
-
-
-State 15
-
-   13 R: LBRACK expr . RBRACK
-
-    RBRACK  shift, and go to state 24
-
-
-State 16
-
-   11 A: MOD A .
-
-    $default  reduce using rule 11 (A)
-
-
-State 17
-
-    4 vars: LET expr COLON . NUMBER vars
-
-    NUMBER  shift, and go to state 25
-
-
-State 18
-
-    5 expr: N DIV . expr
-
-    LBRACK  shift, and go to state 6
-    MOD     shift, and go to state 7
-    NUMBER  shift, and go to state 8
-    ID      shift, and go to state 9
-
-    expr  go to state 26
-    N     go to state 11
-    A     go to state 12
-    R     go to state 13
-
-
-State 19
-
-    6 expr: N MULT . expr
-
-    LBRACK  shift, and go to state 6
-    MOD     shift, and go to state 7
-    NUMBER  shift, and go to state 8
-    ID      shift, and go to state 9
-
-    expr  go to state 27
-    N     go to state 11
-    A     go to state 12
-    R     go to state 13
-
-
-State 20
-
-    8 N: A PLUS . N
-
-    LBRACK  shift, and go to state 6
-    MOD     shift, and go to state 7
-    NUMBER  shift, and go to state 8
-    ID      shift, and go to state 9
-
-    N  go to state 28
-    A  go to state 12
-    R  go to state 13
-
-
-State 21
-
-    9 N: A MINUS . N
-
-    LBRACK  shift, and go to state 6
-    MOD     shift, and go to state 7
-    NUMBER  shift, and go to state 8
-    ID      shift, and go to state 9
-
-    N  go to state 29
-    A  go to state 12
-    R  go to state 13
-
-
-State 22
 
     2 block: RBRACE . vars stats LBRACE
 
@@ -396,202 +253,347 @@ State 22
 
     $default  reduce using rule 3 (vars)
 
-    vars  go to state 30
+    vars  go to state 19
 
 
-State 23
+State 10
 
     1 program: START vars MAIN block . STOP
 
-    STOP  shift, and go to state 31
+    STOP  shift, and go to state 20
 
 
-State 24
+State 11
 
-   13 R: LBRACK expr RBRACK .
+   13 R: LBRACK . expr RBRACK
 
-    $default  reduce using rule 13 (R)
+    LBRACK  shift, and go to state 11
+    MOD     shift, and go to state 12
+    NUMBER  shift, and go to state 13
+    ID      shift, and go to state 14
+
+    expr  go to state 21
+    N     go to state 16
+    A     go to state 17
+    R     go to state 18
 
 
-State 25
+State 12
 
-    4 vars: LET expr COLON NUMBER . vars
+   11 A: MOD . A
+
+    LBRACK  shift, and go to state 11
+    MOD     shift, and go to state 12
+    NUMBER  shift, and go to state 13
+    ID      shift, and go to state 14
+
+    A  go to state 22
+    R  go to state 18
+
+
+State 13
+
+   15 R: NUMBER .
+
+    $default  reduce using rule 15 (R)
+
+
+State 14
+
+   14 R: ID .
+
+    $default  reduce using rule 14 (R)
+
+
+State 15
+
+    4 vars: LET ID COLON expr . vars
 
     LET  shift, and go to state 3
 
     $default  reduce using rule 3 (vars)
 
-    vars  go to state 32
+    vars  go to state 23
 
 
-State 26
+State 16
 
-    5 expr: N DIV expr .
+    5 expr: N . DIV expr
+    6     | N . MULT expr
+    7     | N .
 
-    $default  reduce using rule 5 (expr)
+    DIV   shift, and go to state 24
+    MULT  shift, and go to state 25
 
-
-State 27
-
-    6 expr: N MULT expr .
-
-    $default  reduce using rule 6 (expr)
+    $default  reduce using rule 7 (expr)
 
 
-State 28
+State 17
 
-    8 N: A PLUS N .
+    8 N: A . PLUS N
+    9  | A . MINUS N
+   10  | A .
 
-    $default  reduce using rule 8 (N)
+    PLUS   shift, and go to state 26
+    MINUS  shift, and go to state 27
 
-
-State 29
-
-    9 N: A MINUS N .
-
-    $default  reduce using rule 9 (N)
+    $default  reduce using rule 10 (N)
 
 
-State 30
+State 18
+
+   12 A: R .
+
+    $default  reduce using rule 12 (A)
+
+
+State 19
 
     2 block: RBRACE vars . stats LBRACE
 
-    RBRACE  shift, and go to state 22
-    SCANF   shift, and go to state 33
-    PRINTF  shift, and go to state 34
-    IF      shift, and go to state 35
-    ITER    shift, and go to state 36
-    ID      shift, and go to state 37
+    RBRACE  shift, and go to state 9
+    SCANF   shift, and go to state 28
+    PRINTF  shift, and go to state 29
+    IF      shift, and go to state 30
+    ITER    shift, and go to state 31
+    ID      shift, and go to state 32
 
-    block    go to state 38
-    stats    go to state 39
-    stat     go to state 40
-    in       go to state 41
-    out      go to state 42
-    if_stat  go to state 43
-    loop     go to state 44
-    assign   go to state 45
+    block    go to state 33
+    stats    go to state 34
+    stat     go to state 35
+    in       go to state 36
+    out      go to state 37
+    if_stat  go to state 38
+    loop     go to state 39
+    assign   go to state 40
 
 
-State 31
+State 20
 
     1 program: START vars MAIN block STOP .
 
     $default  reduce using rule 1 (program)
 
 
-State 32
+State 21
 
-    4 vars: LET expr COLON NUMBER vars .
+   13 R: LBRACK expr . RBRACK
+
+    RBRACK  shift, and go to state 41
+
+
+State 22
+
+   11 A: MOD A .
+
+    $default  reduce using rule 11 (A)
+
+
+State 23
+
+    4 vars: LET ID COLON expr vars .
 
     $default  reduce using rule 4 (vars)
 
 
-State 33
+State 24
+
+    5 expr: N DIV . expr
+
+    LBRACK  shift, and go to state 11
+    MOD     shift, and go to state 12
+    NUMBER  shift, and go to state 13
+    ID      shift, and go to state 14
+
+    expr  go to state 42
+    N     go to state 16
+    A     go to state 17
+    R     go to state 18
+
+
+State 25
+
+    6 expr: N MULT . expr
+
+    LBRACK  shift, and go to state 11
+    MOD     shift, and go to state 12
+    NUMBER  shift, and go to state 13
+    ID      shift, and go to state 14
+
+    expr  go to state 43
+    N     go to state 16
+    A     go to state 17
+    R     go to state 18
+
+
+State 26
+
+    8 N: A PLUS . N
+
+    LBRACK  shift, and go to state 11
+    MOD     shift, and go to state 12
+    NUMBER  shift, and go to state 13
+    ID      shift, and go to state 14
+
+    N  go to state 44
+    A  go to state 17
+    R  go to state 18
+
+
+State 27
+
+    9 N: A MINUS . N
+
+    LBRACK  shift, and go to state 11
+    MOD     shift, and go to state 12
+    NUMBER  shift, and go to state 13
+    ID      shift, and go to state 14
+
+    N  go to state 45
+    A  go to state 17
+    R  go to state 18
+
+
+State 28
 
    25 in: SCANF . LBRACK ID RBRACK
 
     LBRACK  shift, and go to state 46
 
 
-State 34
+State 29
 
    26 out: PRINTF . LBRACK expr RBRACK
 
     LBRACK  shift, and go to state 47
 
 
-State 35
+State 30
 
    27 if_stat: IF . LBRACK expr RO expr RBRACK THEN block
 
     LBRACK  shift, and go to state 48
 
 
-State 36
+State 31
 
    28 loop: ITER . LBRACK expr RO expr RBRACK block
 
     LBRACK  shift, and go to state 49
 
 
-State 37
+State 32
 
    29 assign: ID . ASSIGNS expr
 
     ASSIGNS  shift, and go to state 50
 
 
-State 38
+State 33
 
    21 stat: block .
 
     $default  reduce using rule 21 (stat)
 
 
-State 39
+State 34
 
     2 block: RBRACE vars stats . LBRACE
 
     LBRACE  shift, and go to state 51
 
 
-State 40
+State 35
 
    16 stats: stat . mStat
 
-    RBRACE  shift, and go to state 22
-    SCANF   shift, and go to state 33
-    PRINTF  shift, and go to state 34
-    IF      shift, and go to state 35
-    ITER    shift, and go to state 36
-    ID      shift, and go to state 37
+    RBRACE  shift, and go to state 9
+    SCANF   shift, and go to state 28
+    PRINTF  shift, and go to state 29
+    IF      shift, and go to state 30
+    ITER    shift, and go to state 31
+    ID      shift, and go to state 32
 
     $default  reduce using rule 17 (mStat)
 
-    block    go to state 38
+    block    go to state 33
     mStat    go to state 52
     stat     go to state 53
-    in       go to state 41
-    out      go to state 42
-    if_stat  go to state 43
-    loop     go to state 44
-    assign   go to state 45
+    in       go to state 36
+    out      go to state 37
+    if_stat  go to state 38
+    loop     go to state 39
+    assign   go to state 40
 
 
-State 41
+State 36
 
    19 stat: in . DOT
 
     DOT  shift, and go to state 54
 
 
-State 42
+State 37
 
    20 stat: out . DOT
 
     DOT  shift, and go to state 55
 
 
-State 43
+State 38
 
    22 stat: if_stat . DOT
 
     DOT  shift, and go to state 56
 
 
-State 44
+State 39
 
    23 stat: loop . DOT
 
     DOT  shift, and go to state 57
 
 
-State 45
+State 40
 
    24 stat: assign . DOT
 
     DOT  shift, and go to state 58
+
+
+State 41
+
+   13 R: LBRACK expr RBRACK .
+
+    $default  reduce using rule 13 (R)
+
+
+State 42
+
+    5 expr: N DIV expr .
+
+    $default  reduce using rule 5 (expr)
+
+
+State 43
+
+    6 expr: N MULT expr .
+
+    $default  reduce using rule 6 (expr)
+
+
+State 44
+
+    8 N: A PLUS N .
+
+    $default  reduce using rule 8 (N)
+
+
+State 45
+
+    9 N: A MINUS N .
+
+    $default  reduce using rule 9 (N)
 
 
 State 46
@@ -605,60 +607,60 @@ State 47
 
    26 out: PRINTF LBRACK . expr RBRACK
 
-    LBRACK  shift, and go to state 6
-    MOD     shift, and go to state 7
-    NUMBER  shift, and go to state 8
-    ID      shift, and go to state 9
+    LBRACK  shift, and go to state 11
+    MOD     shift, and go to state 12
+    NUMBER  shift, and go to state 13
+    ID      shift, and go to state 14
 
     expr  go to state 60
-    N     go to state 11
-    A     go to state 12
-    R     go to state 13
+    N     go to state 16
+    A     go to state 17
+    R     go to state 18
 
 
 State 48
 
    27 if_stat: IF LBRACK . expr RO expr RBRACK THEN block
 
-    LBRACK  shift, and go to state 6
-    MOD     shift, and go to state 7
-    NUMBER  shift, and go to state 8
-    ID      shift, and go to state 9
+    LBRACK  shift, and go to state 11
+    MOD     shift, and go to state 12
+    NUMBER  shift, and go to state 13
+    ID      shift, and go to state 14
 
     expr  go to state 61
-    N     go to state 11
-    A     go to state 12
-    R     go to state 13
+    N     go to state 16
+    A     go to state 17
+    R     go to state 18
 
 
 State 49
 
    28 loop: ITER LBRACK . expr RO expr RBRACK block
 
-    LBRACK  shift, and go to state 6
-    MOD     shift, and go to state 7
-    NUMBER  shift, and go to state 8
-    ID      shift, and go to state 9
+    LBRACK  shift, and go to state 11
+    MOD     shift, and go to state 12
+    NUMBER  shift, and go to state 13
+    ID      shift, and go to state 14
 
     expr  go to state 62
-    N     go to state 11
-    A     go to state 12
-    R     go to state 13
+    N     go to state 16
+    A     go to state 17
+    R     go to state 18
 
 
 State 50
 
    29 assign: ID ASSIGNS . expr
 
-    LBRACK  shift, and go to state 6
-    MOD     shift, and go to state 7
-    NUMBER  shift, and go to state 8
-    ID      shift, and go to state 9
+    LBRACK  shift, and go to state 11
+    MOD     shift, and go to state 12
+    NUMBER  shift, and go to state 13
+    ID      shift, and go to state 14
 
     expr  go to state 63
-    N     go to state 11
-    A     go to state 12
-    R     go to state 13
+    N     go to state 16
+    A     go to state 17
+    R     go to state 18
 
 
 State 51
@@ -679,23 +681,23 @@ State 53
 
    18 mStat: stat . mStat
 
-    RBRACE  shift, and go to state 22
-    SCANF   shift, and go to state 33
-    PRINTF  shift, and go to state 34
-    IF      shift, and go to state 35
-    ITER    shift, and go to state 36
-    ID      shift, and go to state 37
+    RBRACE  shift, and go to state 9
+    SCANF   shift, and go to state 28
+    PRINTF  shift, and go to state 29
+    IF      shift, and go to state 30
+    ITER    shift, and go to state 31
+    ID      shift, and go to state 32
 
     $default  reduce using rule 17 (mStat)
 
-    block    go to state 38
+    block    go to state 33
     mStat    go to state 64
     stat     go to state 53
-    in       go to state 41
-    out      go to state 42
-    if_stat  go to state 43
-    loop     go to state 44
-    assign   go to state 45
+    in       go to state 36
+    out      go to state 37
+    if_stat  go to state 38
+    loop     go to state 39
+    assign   go to state 40
 
 
 State 54
@@ -831,30 +833,30 @@ State 71
 
    27 if_stat: IF LBRACK expr RO . expr RBRACK THEN block
 
-    LBRACK  shift, and go to state 6
-    MOD     shift, and go to state 7
-    NUMBER  shift, and go to state 8
-    ID      shift, and go to state 9
+    LBRACK  shift, and go to state 11
+    MOD     shift, and go to state 12
+    NUMBER  shift, and go to state 13
+    ID      shift, and go to state 14
 
     expr  go to state 74
-    N     go to state 11
-    A     go to state 12
-    R     go to state 13
+    N     go to state 16
+    A     go to state 17
+    R     go to state 18
 
 
 State 72
 
    28 loop: ITER LBRACK expr RO . expr RBRACK block
 
-    LBRACK  shift, and go to state 6
-    MOD     shift, and go to state 7
-    NUMBER  shift, and go to state 8
-    ID      shift, and go to state 9
+    LBRACK  shift, and go to state 11
+    MOD     shift, and go to state 12
+    NUMBER  shift, and go to state 13
+    ID      shift, and go to state 14
 
     expr  go to state 75
-    N     go to state 11
-    A     go to state 12
-    R     go to state 13
+    N     go to state 16
+    A     go to state 17
+    R     go to state 18
 
 
 State 73
@@ -889,7 +891,7 @@ State 77
 
    28 loop: ITER LBRACK expr RO expr RBRACK . block
 
-    RBRACE  shift, and go to state 22
+    RBRACE  shift, and go to state 9
 
     block  go to state 79
 
@@ -898,7 +900,7 @@ State 78
 
    27 if_stat: IF LBRACK expr RO expr RBRACK THEN . block
 
-    RBRACE  shift, and go to state 22
+    RBRACE  shift, and go to state 9
 
     block  go to state 80
 

@@ -1,7 +1,8 @@
 start
-let x : 13
+let x12 : 1
+let yoi : 2
 main {
+  let x : 3
   scanf [ x ] .
-  printf [ 34 ] .
-
+  printf [ 1 + 1 ] .
 } stop

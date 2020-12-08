@@ -1,13 +1,9 @@
-
-
-frontEnd: lex.yy.c parser.tab.c
-	gcc -o frontEnd parser.tab.c main.c -lfl -DDEBUG
-
-parser.tab.c parser.tab.h: parser.y
-	bison -d -t parser.y
-
-lex.yy.c: lex.l
+all:
+	$(MAKE) flex
+	$(MAKE) grammar
+	gcc parser.tab.c main.c -o frontEnd -lfl -DDEBUG
+grammar:
+	bison -d parser.y
+flex:
 	flex lex.l
-
-clean:
-	rm lex.yy.c y.tab.c frontEnd
+test:

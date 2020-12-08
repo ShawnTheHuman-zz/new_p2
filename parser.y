@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "p3.c"
 
 
 extern char *yytext;
@@ -15,13 +16,13 @@ extern FILE *yyin;
 #define SYMBOLTABLESIZE     50
 #define IDLENGTH       15
 #define NOTHING        -1
-#define INDENTOFFSET    2
+
 
 //#ifdef DEBUG
 char *NodeName[] =
 {
     "PROGRAM", "BLOCK", "VARS", "EXPR", "N", "A", "R", "STATS", "MSTAT", "STAT",
-    "IN", "OUT", "IF_STAT", "LOOP", "ASSIGN", "RO", "IDVAL", "NUMVAL"
+    "IN", "OUT", "IF_STAT", "LOOP", "ASSIGN", "RO", "IDVAL", "NUMVAL", "EMPTY_NODE"
 };
 //#endif
 
@@ -32,9 +33,6 @@ enum ParseTreeNodeType
 };
 
 
-#define TYPE_CHARACTER "char"
-#define TYPE_INTEGER "int"
-#define TYPE_REAL "double"
 
 #ifndef TRUE
 #define TRUE 1
@@ -66,6 +64,9 @@ TREE makeNode(int, int, TREE, TREE);
 void printTree(TREE, int);
 //#endif
 
+void p3(TREE);
+
+
 // symbol table definitions.
 struct symbolTableNode{
     char id[IDLENGTH];
@@ -94,7 +95,7 @@ int curSymSize = 0;
 
 %token SEMICOLON GE LE EQUAL COLON RBRACK LBRACK ASSIGNS LPAREN RPAREN COMMENT
 %token DOT MOD PLUS MINUS DIV MULT RBRACE LBRACE START MAIN STOP LET COMMA
-%token SCANF PRINTF IF ITER THEN FUNC
+%token SCANF PRINTF IF ITER THEN FUNC EMPTY_NODE
 
 %left MULT DIV MOD ADD SUB
 
@@ -111,8 +112,9 @@ program   :     START  vars  MAIN  block  STOP
                     TREE tree;
                     tree = makeNode(NOTHING, PROGRAM, $2,$4);
                     //#ifdef DEBUG
-                    printTree(tree, 0);
+                    //printTree(tree, 0);
                     //#endif
+                    p3(tree);
                 }
 ;
 
@@ -123,11 +125,11 @@ block   :       RBRACE vars stats LBRACE
  ;
 vars    :       /*empty*/
                 {
-                $$ = makeNode(NOTHING, VARS,NULL,NULL);
+                $$ = makeNode(NULL, EMPTY_NODE,NULL,NULL);
                 }
-                | LET expr COLON NUMBER vars
+                | LET ID COLON expr vars
                 {
-                    $$ = makeNode($2, VARS,$2, $5);
+                    $$ = makeNode($2, VARS,$4, $5);
 
                 }
  ;
@@ -295,18 +297,19 @@ void printTree(TREE tree, int depth){
 	if(tree->nodeID == NUMBER)
 		printf("INT: %d ",tree->item);
 	else if(tree->nodeID == ID || tree->nodeID == VARS || tree->nodeID == IN){
-		if(tree->item > 0 && tree->item < SYMBOLTABLESIZE )
+		if(tree->item >= 0 && tree->item < SYMBOLTABLESIZE )
 			printf("id: %s ",symtable[tree->item]->id);
 		else
 			printf("unknown id: %d ", tree->item);
 	}
 	if(tree->item != NOTHING){
 
-		printf("Data: %d ",tree->item);
+		//printf("Data: %d ",tree->item);
 	}
 	// If out of range of the table
-	if (tree->nodeID < 0 || tree->nodeID > sizeof(NodeName))
-		printf("Unknown ID: %d\n",tree->nodeID);
+	if (tree->nodeID < 0 || tree->nodeID >= sizeof(NodeName))
+		//printf("Unknown ID: %d\n",tree->nodeID);
+	    printf("\n");
 	else
 		printf("%s\n",NodeName[tree->nodeID]);
 	printTree(tree->first,depth+2);
@@ -314,6 +317,41 @@ void printTree(TREE tree, int depth){
 
  }
 
+ void p3(TREE tree){
+     const char varArr[20] = "";
+
+     if(tree == NULL) return;
+     if(tree->nodeID == VARS) {
+         //printf("vars\n");
+         char* id = symtable[tree->item]->id;
+         insert(varArr,id);
+         verify(varArr,id);
+         //printf("vars %s\n", symtable[tree->item]->id);
+         //char* str = strstr(varArr, id);
+         //printf("%s \n", str);
+
+
+     }
+//         char * pch;
+//         pch = strstr (varArr,symtable[tree->item]->id);
+//       if(!(verify(symtable[tree->item]->id, varArr))){
+//           insert(symtable[tree->item]->id,varArr);
+//       }
+//        else{printf("Error: previously declared");}
+
+    if(tree->nodeID == IN)
+        printf("IN\n");
+//        if(!(verify(symtable[tree->item]->id, varArr))){
+//            printf("Error: undeclared identifier");
+//           // insert(symtable[tree->item]->id,varArr)
+//        }
+//        else{;}
+
+
+     p3(tree->first);
+     p3(tree->second);
+
+ }
 
 
 

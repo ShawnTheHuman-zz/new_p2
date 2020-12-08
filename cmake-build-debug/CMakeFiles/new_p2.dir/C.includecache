@@ -26,6 +26,28 @@ C:/Users/fuckin poptarts/CLionProjects/new_p2/parser.tab.h
 unistd.h
 -
 
+C:/Users/fuckin poptarts/CLionProjects/new_p2/p3.c
+p3.h
+C:/Users/fuckin poptarts/CLionProjects/new_p2/p3.h
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+stdbool.h
+-
+
+C:/Users/fuckin poptarts/CLionProjects/new_p2/p3.h
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+stdbool.h
+-
+
 C:/Users/fuckin poptarts/CLionProjects/new_p2/parser.tab.c
 stdio.h
 -
@@ -33,6 +55,8 @@ stdlib.h
 -
 string.h
 -
+p3.c
+C:/Users/fuckin poptarts/CLionProjects/new_p2/p3.c
 limits.h
 -
 stdint.h
